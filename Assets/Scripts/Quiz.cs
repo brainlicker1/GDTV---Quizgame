@@ -5,22 +5,47 @@ using TMPro;
 using UnityEngine.UI;
 
 public class Quiz : MonoBehaviour
-{   
+{   [Header("Questions")]
     [SerializeField] TextMeshProUGUI questionText;
     [SerializeField] QuestionSO question;
-    [SerializeField] GameObject[]  answerButtons;
+    
+    [Header("Buttons")]
+        [SerializeField] GameObject[]  answerButtons;
 
+    [Header("Answers")]    
     int correctAnswerIndex;
     [SerializeField] Sprite defaultAnswerSprite;
     [SerializeField] Sprite correctAnswerSprite;
     [SerializeField] Sprite wrongAnswerSprite;
+    bool hasAnsweredEarly; 
+
+    [Header("Timer")]
+    [SerializeField] Image timerImage;
+    Timer timer;
     void Start()
-    {
+    {    
+        timer = FindObjectOfType<Timer>();
          DisplayQuestion();
     }
 
-    public void OnAnswerSelected( int index){
-         Image buttonImage;
+     void Update() {
+        timerImage.fillAmount =  timer.fillFraction;
+        if(timer.loadNextQuestion){
+            hasAnsweredEarly = false;
+            GetNextQuestion();
+            timer.loadNextQuestion = false;
+        }
+        else if(!hasAnsweredEarly && !timer.isAnsweringQuestion){
+
+            DisplayAnswer(-1);
+            SetButtonState(false);
+
+        }
+
+    }
+    void DisplayAnswer(int index){
+
+      Image buttonImage;
         if(index == question.GetCorrectAnswerIndex()){
 
             questionText.text = "Yay bitch";
@@ -39,7 +64,12 @@ public class Quiz : MonoBehaviour
             buttonImage.sprite = correctAnswerSprite;
             
         }
+    }
+    public void OnAnswerSelected( int index){
+        hasAnsweredEarly = true;
+        DisplayAnswer(index);
         SetButtonState(false);
+        timer.CancelTimer();
     }
     
     void GetNextQuestion(){
