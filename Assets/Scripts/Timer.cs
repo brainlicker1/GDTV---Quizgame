@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class Timer : MonoBehaviour
 {
-    
+   
     [SerializeField] float timeToCompleteQuestion = 30f;
     [SerializeField] float timeToShowCoreectAnswer = 10f;
 
 
     public bool loadNextQuestion;
     public float fillFraction;
-    bool isAnsweringQuestion;
+    public bool isAnsweringQuestion;
     float timerValue;
 
     void Update()
@@ -55,7 +55,7 @@ public class Timer : MonoBehaviour
 
         }}
         
-        void CanelTimer() {
+        public void CancelTimer() {
             timerValue = 0;
         }
         
